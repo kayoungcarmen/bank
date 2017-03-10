@@ -187,7 +187,7 @@ t.test(bank$age~bank$y) # p-value = 1.805e-06
 
 
 ### Combine age and job
-install.package("ggplot2")
+install.packages("ggplot2")
 library("ggplot2") 
 gg <- ggplot(bank, aes(job, age))
 gg + geom_point(aes(colour=y)) 
@@ -421,25 +421,10 @@ chisq.test(table_loan) # p-value = 0.6819
 
 
 
-# Reading Data and take a look
-bank <- read.csv("bank-additional-full.csv",stringsAsFactors=TRUE,header=TRUE,sep=";")
-str(bank)
-bank[0:5,]
-
-
-# Check missing values
-sapply(bank, function(x) sum(is.na(x))) # zero missing value
-
-
-
-
-################ Exploratory data analysis ################
-# Please refer to seperate R file (bank_EDA.R)
-
-
 
 
 ################ Modeling ################
+
 
 # Delete the observations with “unknown” in the variables including jobs, marital, housing, and loan and pday of 999
 bank <- bank[!(bank$job=="unknown" | bank$marital=="unknown" | bank$housing=="unknown" | bank$loan=="unknown"| bank$pdays=="999"),]
@@ -452,12 +437,12 @@ bank_train <- bank[-testrows,]
 
 
 ################ Random Forest w/ caret
-
+install.packages("randomForest")
 library(randomForest) 
 set.seed(100) 
 
 
-##### Model training and tuning
+# Model training and tuning
 
 customRF <- list(type = "Classification", library = "randomForest", loop = NULL)
 customRF$parameters <- data.frame(parameter = c("mtry", "ntree"), class = rep("numeric", 2), label = c("mtry", "ntree"))
@@ -474,6 +459,7 @@ customRF$levels <- function(x) x$classes
 
 
 # train model
+install.packages("caret")
 library(caret)
 control <- trainControl(method="repeatedcv", number=10, repeats=3, summaryFunction = twoClassSummary,classProbs = TRUE)
 tunegrid <- expand.grid(.mtry=c(1:15), .ntree=c(10, 20, 30, 40))
